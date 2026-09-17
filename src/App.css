@@ -26,6 +26,10 @@ body {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
 }
 
+.card h2 {
+  color: #111827;
+}
+
 .brand {
   display: flex;
   align-items: center;
