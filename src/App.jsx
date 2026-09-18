@@ -13,7 +13,7 @@ function App() {
 
       const name = params.get('name')
       const email = params.get('email')
-      const phone = params.get('phone')
+      const phone = params.get('answer_1')
       const bookingId = params.get('booking_id')
       const startAt = params.get('start_at')
       const endAt = params.get('end_at')
