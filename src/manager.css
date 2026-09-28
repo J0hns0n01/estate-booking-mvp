@@ -1,0 +1,290 @@
+/* =====================================================
+   Manager Dashboard — layout & component styles
+   Shared classes (badges, table, spinner, admin-header,
+   admin-main, admin-brand, filter-bar, etc.) come from
+   admin.css which ManagerDashboard also imports.
+   ===================================================== */
+
+/* ── Page shell ── */
+.mgr-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+  font-family: Inter, Arial, sans-serif;
+  color: #1e293b;
+}
+
+/* ── Header overrides (purple tint) ── */
+.mgr-header { background: #1e1b4b; }
+
+.mgr-logo { background: #7c3aed !important; }
+
+.mgr-tag {
+  background: #2e1065 !important;
+  color: #c4b5fd !important;
+  border-color: #7c3aed !important;
+}
+
+/* ── Section title ── */
+.mgr-section-title {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* ── Metrics grid ── */
+.mgr-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 960px) { .mgr-metrics-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .mgr-metrics-grid { grid-template-columns: 1fr; } }
+
+.mgr-metric-wide { grid-column: span 2; }
+@media (max-width: 960px) { .mgr-metric-wide { grid-column: span 2; } }
+@media (max-width: 520px) { .mgr-metric-wide { grid-column: span 1; } }
+
+.mgr-metric-card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  border-left: 4px solid #e2e8f0;
+}
+
+.mgr-metric-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.mgr-metric-label {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.mgr-metric-note {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* Accent colours */
+.mgr-accent-blue    { border-left-color: #3b82f6; }
+.mgr-accent-indigo  { border-left-color: #6366f1; }
+.mgr-accent-green   { border-left-color: #22c55e; }
+.mgr-accent-red     { border-left-color: #ef4444; }
+.mgr-accent-teal    { border-left-color: #14b8a6; }
+.mgr-accent-amber   { border-left-color: #f59e0b; }
+.mgr-accent-emerald { border-left-color: #10b981; }
+
+/* ── Facility cards ── */
+.mgr-facility-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 900px)  { .mgr-facility-grid { grid-template-columns: 1fr; } }
+
+.facility-card {
+  background: white;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+
+.facility-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.facility-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.facility-card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.facility-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 18px;
+}
+
+.facility-stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #f8fafc;
+}
+
+.facility-stat-row:last-child { border-bottom: none; }
+
+.facility-stat-label { color: #64748b; }
+.facility-stat-value { font-weight: 600; color: #0f172a; }
+
+/* Utilisation bar */
+.facility-util {
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.facility-util-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.util-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.util-bar-track {
+  flex: 1;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.util-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.util-bar-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ── Charts grid ── */
+.mgr-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 1024px) { .mgr-charts-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .mgr-charts-grid { grid-template-columns: 1fr; } }
+
+.chart-card {
+  background: white;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+
+.chart-card h3 {
+  margin: 0 0 18px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #334155;
+}
+
+/* Horizontal bar chart */
+.horiz-bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.horiz-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.horiz-bar-label {
+  width: 110px;
+  flex-shrink: 0;
+  color: #475569;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.horiz-bar-track {
+  flex: 1;
+  height: 10px;
+  background: #f1f5f9;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.horiz-bar-fill {
+  height: 100%;
+  background: #6366f1;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+  min-width: 4px;
+}
+
+.horiz-bar-val {
+  min-width: 48px;
+  text-align: right;
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 12px;
+}
+
+/* Status breakdown */
+.status-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.status-break-row { display: flex; flex-direction: column; gap: 5px; }
+
+.status-break-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.status-break-label { color: #475569; }
+.status-break-count { font-weight: 700; color: #0f172a; }
+
+.status-break-track {
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.status-break-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+  min-width: 4px;
+}
