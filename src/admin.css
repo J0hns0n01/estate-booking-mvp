@@ -639,3 +639,95 @@
   cursor: not-allowed;
 }
 
+/* ---- Facility Pricing ---- */
+.admin-section {
+  margin-bottom: 28px;
+}
+
+.admin-section h2 {
+  font-size: 16px;
+  margin: 0 0 16px;
+  color: #0f172a;
+}
+
+.fp-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fp-row {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.fp-name {
+  font-weight: 600;
+  color: #0f172a;
+  flex: 1;
+  min-width: 150px;
+}
+
+.fp-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fp-input-group label {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.fp-input-group input {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 140px;
+}
+
+.fp-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 180px;
+}
+
+.fp-btn-save {
+  padding: 8px 16px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.fp-btn-save:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.fp-btn-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fp-success {
+  color: #10b981;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fp-error {
+  color: #ef4444;
+  font-size: 13px;
+}

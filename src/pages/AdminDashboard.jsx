@@ -221,10 +221,63 @@ function DetailRow({ label, value, mono }) {
   )
 }
 
+/* ── FacilityPricingRow ─────────────────────────────── */
+
+function FacilityPricingRow({ facility }) {
+  const [rate, setRate] = useState(facility.rate_per_30_minutes)
+  const [minDuration, setMinDuration] = useState(facility.minimum_duration_minutes)
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
+  const [saved, setSaved] = useState(false)
+
+  const isDirty = rate !== facility.rate_per_30_minutes || minDuration !== facility.minimum_duration_minutes
+
+  async function handleSave() {
+    setSaving(true)
+    setSaveError('')
+    setSaved(false)
+    const { error } = await supabase
+      .from('facilities')
+      .update({ rate_per_30_minutes: rate, minimum_duration_minutes: minDuration })
+      .eq('slug', facility.slug)
+
+    if (error) {
+      setSaveError(error.message)
+    } else {
+      setSaved(true)
+      facility.rate_per_30_minutes = rate
+      facility.minimum_duration_minutes = minDuration
+    }
+    setSaving(false)
+  }
+
+  return (
+    <div className="fp-row">
+      <div className="fp-name">{facility.name}</div>
+      <div className="fp-input-group">
+        <label>Rate / 30m (GH₵)</label>
+        <input type="number" value={rate} onChange={e => { setRate(Number(e.target.value)); setSaved(false) }} />
+      </div>
+      <div className="fp-input-group">
+        <label>Min Duration (min)</label>
+        <input type="number" value={minDuration} onChange={e => { setMinDuration(Number(e.target.value)); setSaved(false) }} />
+      </div>
+      <div className="fp-actions">
+        <button className="fp-btn-save" onClick={handleSave} disabled={saving || !isDirty}>
+          {saving ? 'Saving...' : 'Save'}
+        </button>
+        {saved && !isDirty && <span className="fp-success">✓ Saved</span>}
+        {saveError && <span className="fp-error">⚠ {saveError}</span>}
+      </div>
+    </div>
+  )
+}
+
 /* ── AdminDashboard ─────────────────────────────────── */
 
 function AdminDashboard() {
   const [bookings, setBookings] = useState([])
+  const [facilities, setFacilities] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -236,20 +289,32 @@ function AdminDashboard() {
   const [selectedBooking, setSelectedBooking] = useState(null)
 
   useEffect(() => {
-    async function fetchBookings() {
-      const { data, error } = await supabase
+    async function fetchData() {
+      const { data: bData, error: bError } = await supabase
         .from('bookings')
         .select('*')
         .order('booking_date', { ascending: false })
 
-      if (error) {
-        setError(error.message)
+      const { data: fData, error: fError } = await supabase
+        .from('facilities')
+        .select('*')
+        .order('name', { ascending: true })
+
+      if (bError) {
+        setError(bError.message)
       } else {
-        setBookings(data || [])
+        setBookings(bData || [])
       }
+
+      if (fError && !bError) {
+        setError(fError.message)
+      } else if (fData) {
+        setFacilities(fData)
+      }
+
       setLoading(false)
     }
-    fetchBookings()
+    fetchData()
   }, [])
 
   // Called by modal after a successful save — updates local state
@@ -321,6 +386,22 @@ function AdminDashboard() {
             <div className="stat-value">{confirmed}</div>
             <div className="stat-label">Confirmed</div>
           </div>
+        </section>
+
+        {/* ── Facility Pricing ── */}
+        <section className="admin-section">
+          <h2>Facility Pricing</h2>
+          {loading ? (
+            <p>Loading facilities...</p>
+          ) : facilities.length === 0 ? (
+            <p className="admin-empty">No facilities configured.</p>
+          ) : (
+            <div className="fp-container">
+              {facilities.map(f => (
+                <FacilityPricingRow key={f.slug} facility={f} />
+              ))}
+            </div>
+          )}
         </section>
 
         {/* ── Filters ── */}

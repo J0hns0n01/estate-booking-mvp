@@ -6,6 +6,7 @@ function PaymentBridge() {
   const [booking, setBooking] = useState(null)
   const [loading, setLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
+  const [paymentInitializing, setPaymentInitializing] = useState(false)
 
   useEffect(() => {
     async function loadBooking() {
@@ -65,6 +66,32 @@ function PaymentBridge() {
         }
       }
 
+      if (!durationMinutes) {
+        setErrorMessage('Invalid booking duration.')
+        setLoading(false)
+        return
+      }
+
+      const { data: facilityData, error: facilityError } = await supabase
+        .from('facilities')
+        .select('*')
+        .eq('slug', facility)
+        .single()
+
+      if (facilityError || !facilityData) {
+        setErrorMessage('Invalid facility or pricing not found.')
+        setLoading(false)
+        return
+      }
+
+      if (durationMinutes < facilityData.minimum_duration_minutes) {
+        setErrorMessage(`Minimum booking duration for this facility is ${facilityData.minimum_duration_minutes} minutes.`)
+        setLoading(false)
+        return
+      }
+
+      const amount = (durationMinutes / 30) * facilityData.rate_per_30_minutes;
+
       const { error } = await supabase
         .from('bookings')
         .insert({
@@ -83,6 +110,7 @@ function PaymentBridge() {
             : null,
           duration_minutes: durationMinutes,
           facility: facility || null,
+          amount: amount,
           payment_status: 'pending',
           booking_status: 'pending_approval'
         })
@@ -103,7 +131,9 @@ function PaymentBridge() {
         startTime,
         endTime,
         durationMinutes,
-        facilityLabel
+        facilitySlug: facility || null,
+        facilityLabel,
+        amount
       })
 
       setLoading(false)
@@ -112,8 +142,37 @@ function PaymentBridge() {
     loadBooking()
   }, [])
 
-  function handlePayment() {
-    window.location.href = 'https://paystack.shop/pay/p9ijb0e40n'
+  async function handlePayment() {
+    if (!booking) return
+    setPaymentInitializing(true)
+    setErrorMessage('')
+
+    try {
+      const res = await fetch('/api/initialize-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: booking.email,
+          amount: booking.amount,
+          booking_id: booking.bookingId,
+          facility: booking.facilitySlug
+        })
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to initialize payment')
+      }
+
+      window.location.href = data.authorization_url
+    } catch (err) {
+      console.error(err)
+      setErrorMessage(err.message)
+      setPaymentInitializing(false)
+    }
   }
 
   if (loading) {
@@ -200,13 +259,18 @@ function PaymentBridge() {
           </div>
 
           <div className="row">
+            <span>Amount</span>
+            <strong>GH₵ {booking.amount?.toLocaleString('en-GH')}</strong>
+          </div>
+
+          <div className="row">
             <span>Booking ID</span>
             <strong>{booking.bookingId}</strong>
           </div>
         </div>
 
-        <button className="payButton" onClick={handlePayment}>
-          Proceed to Payment
+        <button className="payButton" onClick={handlePayment} disabled={paymentInitializing}>
+          {paymentInitializing ? 'Preparing Payment...' : 'Proceed to Payment'}
         </button>
 
         <p className="note">
