@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { supabase } from '../supabase'
 import '../App.css'
 
 function PaymentBridge() {
+  const { facilityParam } = useParams()
   const [booking, setBooking] = useState(null)
   const [loading, setLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
@@ -18,7 +20,7 @@ function PaymentBridge() {
       const bookingId = params.get('booking_id')
       const startAt = params.get('start_at')
       const endAt = params.get('end_at')
-      const facility = params.get('facility')
+      const facility = facilityParam || params.get('facility')
 
       const FACILITY_LABELS = {
         conference_hall: 'Conference Hall',

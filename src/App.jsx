@@ -10,6 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/payment" element={<PaymentBridge />} />
+        <Route path="/payment/:facilityParam" element={<PaymentBridge />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/manager" element={<ManagerDashboard />} />
         <Route path="*" element={<Navigate to="/" replace />} />
