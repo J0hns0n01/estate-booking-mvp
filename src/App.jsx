@@ -3,6 +3,7 @@ import LandingPage from './pages/LandingPage'
 import PaymentBridge from './pages/PaymentBridge'
 import AdminDashboard from './pages/AdminDashboard'
 import ManagerDashboard from './pages/ManagerDashboard'
+import StaffSchedule from './pages/StaffSchedule'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/payment/:facilityParam" element={<PaymentBridge />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/manager" element={<ManagerDashboard />} />
+        <Route path="/schedule/:facilityKey" element={<StaffSchedule />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

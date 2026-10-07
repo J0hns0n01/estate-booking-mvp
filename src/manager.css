@@ -1,35 +1,35 @@
 /* =====================================================
    Manager Dashboard — layout & component styles
    Shared classes (badges, table, spinner, admin-header,
-   admin-main, admin-brand, filter-bar, etc.) come from
-   admin.css which ManagerDashboard also imports.
+   admin-main, admin-brand) come from admin.css.
+   This file only contains .mgr-* and manager-specific
+   overrides scoped tightly so AdminDashboard is unaffected.
    ===================================================== */
 
 /* ── Page shell ── */
 .mgr-page {
   min-height: 100vh;
-  background: #f1f5f9;
+  background: #fbf9f6;
   font-family: Inter, Arial, sans-serif;
-  color: #1e293b;
+  color: #1a202c;
 }
 
-/* ── Header overrides (purple tint) ── */
-.mgr-header { background: #1e1b4b; }
-
-.mgr-logo { background: #7c3aed !important; }
-
-.mgr-tag {
-  background: #2e1065 !important;
-  color: #c4b5fd !important;
-  border-color: #7c3aed !important;
+/* ── Section header (title + subtitle) ── */
+.mgr-section-header {
+  margin: 0 0 20px;
 }
 
-/* ── Section title ── */
-.mgr-section-title {
-  margin: 0 0 16px;
-  font-size: 16px;
+.mgr-section-header h2 {
+  font-size: 18px;
   font-weight: 700;
-  color: #0f172a;
+  color: #1a202c;
+  margin: 0 0 4px;
+}
+
+.mgr-section-header p {
+  font-size: 14px;
+  color: #718096;
+  margin: 0;
 }
 
 /* ── Metrics grid ── */
@@ -37,122 +37,191 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  margin-bottom: 32px;
+  margin-bottom: 36px;
 }
 
-@media (max-width: 960px) { .mgr-metrics-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 520px) { .mgr-metrics-grid { grid-template-columns: 1fr; } }
+@media (max-width: 960px) {
+  .mgr-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
-.mgr-metric-wide { grid-column: span 2; }
-@media (max-width: 960px) { .mgr-metric-wide { grid-column: span 2; } }
-@media (max-width: 520px) { .mgr-metric-wide { grid-column: span 1; } }
+@media (max-width: 520px) {
+  .mgr-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mgr-metric-wide {
+  grid-column: span 2;
+}
+
+@media (max-width: 960px) {
+  .mgr-metric-wide {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 520px) {
+  .mgr-metric-wide {
+    grid-column: span 1;
+  }
+}
 
 .mgr-metric-card {
-  background: white;
-  border-radius: 14px;
-  padding: 20px 22px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-  border-left: 4px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  border-top: 4px solid #cbd5e1;
 }
 
 .mgr-metric-value {
   font-size: 28px;
   font-weight: 700;
-  color: #0f172a;
+  color: #1a202c;
   line-height: 1;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .mgr-metric-label {
   font-size: 13px;
-  color: #64748b;
+  color: #4a5568;
   font-weight: 500;
 }
 
 .mgr-metric-note {
-  margin-top: 4px;
+  margin-top: 6px;
   font-size: 11px;
-  color: #94a3b8;
+  color: #a0aec0;
+  font-style: italic;
 }
 
-/* Accent colours */
-.mgr-accent-blue    { border-left-color: #3b82f6; }
-.mgr-accent-indigo  { border-left-color: #6366f1; }
-.mgr-accent-green   { border-left-color: #22c55e; }
-.mgr-accent-red     { border-left-color: #ef4444; }
-.mgr-accent-teal    { border-left-color: #14b8a6; }
-.mgr-accent-amber   { border-left-color: #f59e0b; }
-.mgr-accent-emerald { border-left-color: #10b981; }
+/* Accent colours — brand-aligned palette */
+.mgr-accent-neutral {
+  border-top-color: #cbd5e1;
+}
 
-/* ── Facility cards ── */
+.mgr-accent-green {
+  border-top-color: #16a34a;
+}
+
+.mgr-accent-red {
+  border-top-color: #dc2626;
+}
+
+.mgr-accent-amber {
+  border-top-color: #d97706;
+}
+
+.mgr-accent-forest {
+  border-top-color: #133b2b;
+}
+
+/* Revenue card — prominent green value */
+.mgr-accent-forest .mgr-metric-value {
+  color: #133b2b;
+  font-size: 32px;
+}
+
+/* ── Facility performance cards ── */
 .mgr-facility-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  margin-bottom: 32px;
+  margin-bottom: 36px;
 }
 
-@media (max-width: 900px)  { .mgr-facility-grid { grid-template-columns: 1fr; } }
-
-.facility-card {
-  background: white;
-  border-radius: 16px;
-  padding: 22px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+@media (max-width: 960px) {
+  .mgr-facility-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-.facility-card-header {
+.mgr-facility-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+}
+
+.mgr-facility-card-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-.facility-icon {
-  font-size: 26px;
-  line-height: 1;
-}
-
-.facility-card-header h3 {
-  margin: 0;
-  font-size: 16px;
+.mgr-facility-initial {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: #133b2b;
+  color: #ffffff;
+  font-size: 18px;
   font-weight: 700;
-  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.facility-stats {
+.mgr-facility-card-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.mgr-facility-stats {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
-.facility-stat-row {
+.mgr-facility-card .facility-stat-row {
   display: flex;
   justify-content: space-between;
-  padding: 7px 0;
-  font-size: 14px;
+  align-items: center;
+  gap: 24px;
   border-bottom: 1px solid #f8fafc;
+  padding: 9px 0;
 }
 
-.facility-stat-row:last-child { border-bottom: none; }
+.mgr-facility-card .facility-stat-row:last-child {
+  border-bottom: none;
+}
 
-.facility-stat-label { color: #64748b; }
-.facility-stat-value { font-weight: 600; color: #0f172a; }
+.mgr-facility-card .facility-stat-label {
+  color: #718096;
+  font-size: 13px;
+}
 
-/* Utilisation bar */
-.facility-util {
-  padding-top: 10px;
+.mgr-facility-card .facility-stat-value {
+  font-weight: 600;
+  font-size: 13px;
+  color: #1a202c;
+  text-align: right;
+  margin-left: auto;
+}
+
+/* ── Utilisation bar ── */
+.mgr-facility-util {
+  padding-top: 16px;
   border-top: 1px solid #f1f5f9;
 }
 
-.facility-util-label {
+.mgr-facility-util-label {
   display: block;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #94a3b8;
+  color: #a0aec0;
   margin-bottom: 8px;
 }
 
@@ -179,7 +248,7 @@
 .util-bar-label {
   font-size: 13px;
   font-weight: 700;
-  color: #475569;
+  color: #4a5568;
   min-width: 36px;
   text-align: right;
 }
@@ -189,31 +258,43 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  margin-bottom: 32px;
+  margin-bottom: 36px;
 }
 
-@media (max-width: 1024px) { .mgr-charts-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 640px)  { .mgr-charts-grid { grid-template-columns: 1fr; } }
-
-.chart-card {
-  background: white;
-  border-radius: 16px;
-  padding: 22px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+@media (max-width: 1024px) {
+  .mgr-charts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.chart-card h3 {
-  margin: 0 0 18px;
-  font-size: 14px;
+@media (max-width: 640px) {
+  .mgr-charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mgr-chart-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+}
+
+.mgr-chart-card h3 {
+  margin: 0 0 20px;
+  font-size: 11px;
   font-weight: 700;
-  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #718096;
 }
 
 /* Horizontal bar chart */
 .horiz-bar-chart {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .horiz-bar-row {
@@ -226,7 +307,7 @@
 .horiz-bar-label {
   width: 110px;
   flex-shrink: 0;
-  color: #475569;
+  color: #4a5568;
   font-size: 12px;
   white-space: nowrap;
   overflow: hidden;
@@ -243,17 +324,17 @@
 
 .horiz-bar-fill {
   height: 100%;
-  background: #6366f1;
+  background: #133b2b;
   border-radius: 99px;
   transition: width 0.4s ease;
   min-width: 4px;
 }
 
 .horiz-bar-val {
-  min-width: 48px;
+  min-width: 56px;
   text-align: right;
   font-weight: 600;
-  color: #0f172a;
+  color: #1a202c;
   font-size: 12px;
 }
 
@@ -261,10 +342,14 @@
 .status-breakdown {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
-.status-break-row { display: flex; flex-direction: column; gap: 5px; }
+.status-break-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
 .status-break-top {
   display: flex;
@@ -272,8 +357,14 @@
   font-size: 13px;
 }
 
-.status-break-label { color: #475569; }
-.status-break-count { font-weight: 700; color: #0f172a; }
+.status-break-label {
+  color: #4a5568;
+}
+
+.status-break-count {
+  font-weight: 700;
+  color: #1a202c;
+}
 
 .status-break-track {
   height: 8px;

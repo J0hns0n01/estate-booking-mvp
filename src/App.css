@@ -170,3 +170,239 @@ body {
     transform: rotate(360deg);
   }
 }
+
+/* ── Premium Payment Bridge ── */
+.payment-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: #fbf9f6;
+  /* Warm off-white */
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  color: #1a202c;
+  /* Dark charcoal */
+}
+
+.payment-card {
+  width: min(620px, calc(100% - 32px));
+  max-width: 540px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.payment-header {
+  text-align: center;
+  padding: 32px 24px 28px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.payment-brand-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #133b2b;
+  /* Deep forest green */
+  letter-spacing: 0.04em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.payment-brand-subtitle {
+  font-size: 13px;
+  color: #718096;
+  font-weight: 500;
+  margin: 4px 0 0;
+}
+
+.payment-status-panel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.payment-status-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #133b2b;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.payment-status-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.payment-status-icon.error {
+  background: #ef4444;
+}
+
+.payment-status-text h2 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  color: #1a202c;
+  font-weight: 600;
+}
+
+.payment-status-text p {
+  margin: 0;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.payment-summary {
+  padding: 24px;
+}
+
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.payment-row:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 480px) {
+  .payment-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .payment-value {
+    text-align: left !important;
+  }
+}
+
+.payment-label {
+  font-size: 14px;
+  color: #718096;
+  font-weight: 500;
+}
+
+.payment-value {
+  font-size: 14px;
+  color: #1a202c;
+  font-weight: 500;
+  text-align: right;
+  word-break: break-word;
+}
+
+.payment-row--amount {
+  background: #f8fafc;
+  margin: 8px -24px -24px;
+  padding: 20px 24px;
+  align-items: center;
+  border-top: 1px solid #e2e8f0;
+}
+
+.payment-row--amount .payment-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.payment-row--amount .payment-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #133b2b;
+}
+
+.payment-action {
+  padding: 24px;
+  text-align: center;
+}
+
+.payment-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: #133b2b;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.payment-btn:hover:not(:disabled) {
+  background: #1c523c;
+}
+
+.payment-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.payment-trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.payment-trust svg {
+  width: 16px;
+  height: 16px;
+  color: #d4af37;
+}
+
+.payment-note {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #718096;
+  line-height: 1.5;
+}
+
+.payment-card--loading,
+.payment-card--error {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.payment-spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 24px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #133b2b;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.payment-card--loading h2,
+.payment-card--error h2 {
+  font-size: 20px;
+  margin: 0 0 8px;
+  color: #1a202c;
+}
+
+.payment-card--loading p,
+.payment-card--error p {
+  color: #4a5568;
+  margin: 0;
+  font-size: 15px;
+}
+
+.payment-card--error .payment-status-icon {
+  margin: 0 auto 24px;
+}

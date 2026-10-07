@@ -1,156 +1,302 @@
 /* =====================================================
-   Landing Page Styles
+   Landing Page Styles - Premium Real Estate Theme
    ===================================================== */
 
 .landing-page {
+  width: 100%;
+  max-width: none;
   min-height: 100vh;
-  background: #f8fafc;
-  font-family: Inter, Arial, sans-serif;
-  color: #1e293b;
+  background: #fbf9f6;
+  /* Warm off-white */
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  color: #1a202c;
+  /* Dark charcoal */
   display: flex;
   flex-direction: column;
 }
 
+/* ── Header ── */
 .landing-header {
-  background: white;
-  padding: 0 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  background: #ffffff;
+  padding: 16px 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
   position: sticky;
   top: 0;
   z-index: 10;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .landing-brand {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: none;
+  margin: 0;
   height: 70px;
   display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.landing-logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: #0f172a;
-  color: white;
-  display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
-  font-size: 20px;
-  font-weight: 700;
+  gap: 2px;
+  padding-left: 16px;
 }
 
-.landing-brand h1 {
+.landing-brand-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #133b2b;
+  /* Deep forest green */
+  letter-spacing: 0.04em;
   margin: 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: #0f172a;
+  text-transform: uppercase;
+  line-height: 1.2;
 }
 
+.landing-brand-subtitle {
+  font-size: 13px;
+  color: #718096;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* ── Main Layout ── */
 .landing-main {
   flex: 1;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 60px 24px;
   width: 100%;
 }
 
+/* ── Hero Section ── */
 .landing-hero {
   text-align: center;
+  padding: 80px 24px 60px;
+  background-color: #133b2b;
+  /* Forest green */
+  color: #ffffff;
+  border-radius: 0 0 16px 16px;
   margin-bottom: 60px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.hero-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #d4af37;
+  /* Muted gold */
+  margin-bottom: 16px;
 }
 
 .landing-hero h2 {
-  font-size: 36px;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0 0 16px;
+  font-size: 42px;
+  font-weight: 400;
+  margin: 0 0 20px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .landing-hero p {
   font-size: 18px;
-  color: #64748b;
+  color: #e2e8f0;
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
+  font-weight: 300;
 }
 
+/* ── Section Header ── */
+.section-header {
+  text-align: center;
+  margin-bottom: 48px;
+  padding: 0 24px;
+}
+
+.section-header h3 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 12px;
+}
+
+.section-header p {
+  font-size: 16px;
+  color: #4a5568;
+  margin: 0;
+}
+
+/* ── Facility Cards ── */
 .facility-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+  gap: 32px;
+  padding: 0 24px 60px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .facility-cards {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .facility-cards {
     grid-template-columns: 1fr;
+  }
+
+  .landing-hero {
+    padding: 60px 24px 40px;
+  }
+
+  .landing-hero h2 {
+    font-size: 32px;
   }
 }
 
 .facility-card {
-  background: white;
-  border-radius: 20px;
-  padding: 32px 24px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 40px 32px;
   text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .facility-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+  border-color: #cbd5e1;
 }
 
-.facility-card-icon {
-  font-size: 48px;
-  margin-bottom: 20px;
+.facility-icon {
+  margin-bottom: 24px;
+  color: #133b2b;
 }
 
-.facility-card h3 {
-  font-size: 22px;
-  font-weight: 700;
-  color: #0f172a;
+.facility-icon svg {
+  width: 48px;
+  height: 48px;
+  stroke-width: 1.5;
+}
+
+.facility-card h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a202c;
   margin: 0 0 12px;
 }
 
 .facility-card p {
   font-size: 15px;
-  color: #64748b;
-  line-height: 1.5;
-  margin: 0 0 24px;
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0 0 32px;
   flex: 1;
 }
 
 .book-now-btn {
   display: inline-block;
-  background: #2563eb;
-  color: white;
+  background: #133b2b;
+  color: #ffffff;
   text-decoration: none;
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 16px;
-  transition: background 0.2s;
+  padding: 12px 28px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 15px;
+  transition: background 0.2s ease, transform 0.2s ease;
+  width: 100%;
+  border: 1px solid transparent;
 }
 
 .book-now-btn:hover {
-  background: #1d4ed8;
+  background: #1c523c;
 }
 
-.landing-footer {
-  text-align: center;
-  padding: 30px 24px;
-  color: #94a3b8;
-  font-size: 14px;
+.book-now-btn:focus-visible {
+  outline: 2px solid #d4af37;
+  outline-offset: 2px;
+}
+
+/* ── Trust Strip ── */
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  background: #ffffff;
+  padding: 48px 24px;
   border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+@media (max-width: 768px) {
+  .trust-strip {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: left;
+}
+
+.trust-icon {
+  color: #d4af37;
+  display: flex;
+  align-items: center;
+}
+
+.trust-icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.trust-content h5 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.trust-content p {
+  margin: 0;
+  font-size: 14px;
+  color: #718096;
+}
+
+/* ── Footer ── */
+.landing-footer {
+  background: #1a202c;
+  /* Dark charcoal */
+  color: #a0aec0;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.landing-footer h6 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  margin: 0 0 8px;
+}
+
+.landing-footer p {
+  margin: 0 0 24px;
+  font-size: 14px;
+}
+
+.footer-copy {
+  font-size: 13px;
+  color: #718096;
+  border-top: 1px solid #2d3748;
+  padding-top: 24px;
+  margin: 0;
 }

@@ -13,13 +13,9 @@ import '../manager.css' // manager-specific layout
 
 
 const FACILITY_LIST = [
-
-  { key: 'conference_hall', label: 'Conference Hall', icon: '🏛' },
-
-  { key: 'swimming_pool', label: 'Swimming Pool', icon: '🏊' },
-
-  { key: 'tennis_court', label: 'Tennis Court', icon: '🎾' }
-
+  { key: 'conference_hall', label: 'Conference Hall' },
+  { key: 'swimming_pool',   label: 'Swimming Pool' },
+  { key: 'tennis_court',   label: 'Tennis Court' }
 ]
 
 
@@ -469,118 +465,75 @@ function ManagerDashboard() {
 
 
 
-      {/* Header — reuses admin-header classes, tinted purple */}
-
-      <header className="admin-header mgr-header">
-
+      {/* Header */}
+      <header className="admin-header">
         <div className="admin-header-inner">
-
           <div className="admin-brand">
-
-            <div className="admin-logo mgr-logo">M</div>
-
-            <div>
-
-              <h1>Estate Facilities</h1>
-
-              <p>Manager Dashboard</p>
-
-            </div>
-
+            <h1 className="admin-brand-title">REGIMANUEL GRAY</h1>
+            <p className="admin-brand-subtitle">Estate Facilities</p>
           </div>
-
-          <span className="admin-tag mgr-tag">Manager View</span>
-
+          <span className="admin-tag">General Manager</span>
         </div>
-
       </header>
 
 
 
       <main className="admin-main">
 
-
+        <div className="admin-page-intro">
+          <h2>Management Overview</h2>
+          <p>Monitor facility performance, bookings, utilisation and revenue.</p>
+        </div>
 
         {/* ── Top metrics ── */}
 
         <section className="mgr-metrics-grid">
-
-          <MetricCard label="Total Bookings" value={total} accentClass="mgr-accent-blue" />
-
-          <MetricCard label="Upcoming" value={upcoming} accentClass="mgr-accent-indigo" />
-
-          <MetricCard label="Confirmed" value={confirmed} accentClass="mgr-accent-green" />
-
-          <MetricCard label="Cancelled" value={cancelled} accentClass="mgr-accent-red" />
-
-          <MetricCard label="Paid Bookings" value={paid} accentClass="mgr-accent-teal" />
-
-          <MetricCard label="Pending Payment" value={pendingPayment} accentClass="mgr-accent-amber" />
-
+          <MetricCard label="Total Bookings"   value={total}          accentClass="mgr-accent-neutral" />
+          <MetricCard label="Upcoming"         value={upcoming}       accentClass="mgr-accent-neutral" />
+          <MetricCard label="Confirmed"        value={confirmed}      accentClass="mgr-accent-green" />
+          <MetricCard label="Cancelled"        value={cancelled}      accentClass="mgr-accent-red" />
+          <MetricCard label="Paid Bookings"    value={paid}           accentClass="mgr-accent-green" />
+          <MetricCard label="Pending Payment"  value={pendingPayment} accentClass="mgr-accent-amber" />
           <MetricCard
-
             label="Total Revenue"
-
             value={fmtCurrency(totalRevenue)}
-
-            accentClass="mgr-accent-emerald mgr-metric-wide"
-
-            note="paid bookings"
-
+            accentClass="mgr-accent-forest mgr-metric-wide"
+            note="from paid bookings only"
           />
-
         </section>
 
 
 
         {/* ── Facility summaries ── */}
 
-        <h2 className="mgr-section-title">Facility Summaries</h2>
+        <div className="mgr-section-header">
+          <h2>Facility Summaries</h2>
+          <p>Performance overview for each managed estate facility.</p>
+        </div>
 
         <section className="mgr-facility-grid">
-
           {FACILITY_LIST.map(f => {
-
             const m = facilityMetrics(f.key)
-
             return (
-
-              <div key={f.key} className="facility-card">
-
-                <div className="facility-card-header">
-
-                  <span className="facility-icon">{f.icon}</span>
-
+              <div key={f.key} className="mgr-facility-card">
+                <div className="mgr-facility-card-header">
+                  <div className="mgr-facility-initial">{f.label.charAt(0)}</div>
                   <h3>{f.label}</h3>
-
                 </div>
 
-                <div className="facility-stats">
-
+                <div className="mgr-facility-stats">
                   <FacilityStat label="Total bookings" value={m.total} />
-
-                  <FacilityStat label="Upcoming" value={m.upcoming} />
-
-                  <FacilityStat label="Confirmed" value={m.confirmed} />
-
-                  <FacilityStat label="Cancelled" value={m.cancelled} />
-
-                  <FacilityStat label="Revenue" value={fmtCurrency(m.revenue)} />
-
+                  <FacilityStat label="Upcoming"       value={m.upcoming} />
+                  <FacilityStat label="Confirmed"      value={m.confirmed} />
+                  <FacilityStat label="Cancelled"      value={m.cancelled} />
+                  <FacilityStat label="Revenue"        value={fmtCurrency(m.revenue)} />
                 </div>
-
-                <div className="facility-util">
-
-                  <span className="facility-util-label">30-day utilisation</span>
-
+                <div className="mgr-facility-util">
+                  <span className="mgr-facility-util-label">30-day utilisation</span>
                   <UtilBar pct={m.utilPct} />
-
                 </div>
-
               </div>
-
             )
-
           })}
 
         </section>
@@ -588,43 +541,33 @@ function ManagerDashboard() {
 
 
         {/* ── Visual summaries ── */}
-
-        <h2 className="mgr-section-title">Summaries</h2>
+        <div className="mgr-section-header">
+          <h2>Summary Charts</h2>
+          <p>Visual breakdown of bookings, revenue and reservation status.</p>
+        </div>
 
         <section className="mgr-charts-grid">
-
-          <div className="chart-card">
-
+          <div className="mgr-chart-card">
             <h3>Bookings by Facility</h3>
-
             <HorizBarChart items={bookingsByFacility} />
-
           </div>
-
-          <div className="chart-card">
-
+          <div className="mgr-chart-card">
             <h3>Revenue by Facility</h3>
-
             <HorizBarChart items={revenueByFacility} />
-
           </div>
-
-          <div className="chart-card">
-
+          <div className="mgr-chart-card">
             <h3>Booking Status Breakdown</h3>
-
             <StatusBreakdown items={statusItems} total={total} />
-
           </div>
-
         </section>
 
 
 
         {/* ── Recent / upcoming bookings ── */}
-
-        <h2 className="mgr-section-title">Recent &amp; Upcoming Bookings</h2>
-
+        <div className="mgr-section-header">
+          <h2>Recent &amp; Upcoming Bookings</h2>
+          <p>Read-only view of the latest facility reservations.</p>
+        </div>
         <section className="table-section">
 
           {tableBookings.length === 0 ? (

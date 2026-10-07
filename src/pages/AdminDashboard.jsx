@@ -224,29 +224,46 @@ function DetailRow({ label, value, mono }) {
 /* ── FacilityPricingRow ─────────────────────────────── */
 
 function FacilityPricingRow({ facility }) {
+  const isPerPerson = facility.pricing_model === 'per_person'
+
   const [rate, setRate] = useState(facility.rate_per_30_minutes)
   const [minDuration, setMinDuration] = useState(facility.minimum_duration_minutes)
+  const [pricePerPerson, setPricePerPerson] = useState(facility.price_per_person || 0)
+  const [maxPeople, setMaxPeople] = useState(facility.max_people_per_booking || 0)
+
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
   const [saved, setSaved] = useState(false)
 
-  const isDirty = rate !== facility.rate_per_30_minutes || minDuration !== facility.minimum_duration_minutes
+  const isDirty = isPerPerson
+    ? (pricePerPerson !== facility.price_per_person || maxPeople !== facility.max_people_per_booking)
+    : (rate !== facility.rate_per_30_minutes || minDuration !== facility.minimum_duration_minutes)
 
   async function handleSave() {
     setSaving(true)
     setSaveError('')
     setSaved(false)
+
+    const updateData = isPerPerson
+      ? { price_per_person: pricePerPerson, max_people_per_booking: maxPeople }
+      : { rate_per_30_minutes: rate, minimum_duration_minutes: minDuration }
+
     const { error } = await supabase
       .from('facilities')
-      .update({ rate_per_30_minutes: rate, minimum_duration_minutes: minDuration })
+      .update(updateData)
       .eq('slug', facility.slug)
 
     if (error) {
       setSaveError(error.message)
     } else {
       setSaved(true)
-      facility.rate_per_30_minutes = rate
-      facility.minimum_duration_minutes = minDuration
+      if (isPerPerson) {
+        facility.price_per_person = pricePerPerson
+        facility.max_people_per_booking = maxPeople
+      } else {
+        facility.rate_per_30_minutes = rate
+        facility.minimum_duration_minutes = minDuration
+      }
     }
     setSaving(false)
   }
@@ -254,14 +271,29 @@ function FacilityPricingRow({ facility }) {
   return (
     <div className="fp-row">
       <div className="fp-name">{facility.name}</div>
-      <div className="fp-input-group">
-        <label>Rate / 30m (GH₵)</label>
-        <input type="number" value={rate} onChange={e => { setRate(Number(e.target.value)); setSaved(false) }} />
-      </div>
-      <div className="fp-input-group">
-        <label>Min Duration (min)</label>
-        <input type="number" value={minDuration} onChange={e => { setMinDuration(Number(e.target.value)); setSaved(false) }} />
-      </div>
+      {isPerPerson ? (
+        <>
+          <div className="fp-input-group">
+            <label>Price / Person (GH₵)</label>
+            <input type="number" value={pricePerPerson} onChange={e => { setPricePerPerson(Number(e.target.value)); setSaved(false) }} />
+          </div>
+          <div className="fp-input-group">
+            <label>Max People</label>
+            <input type="number" value={maxPeople} onChange={e => { setMaxPeople(Number(e.target.value)); setSaved(false) }} />
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="fp-input-group">
+            <label>Rate / 30m (GH₵)</label>
+            <input type="number" value={rate} onChange={e => { setRate(Number(e.target.value)); setSaved(false) }} />
+          </div>
+          <div className="fp-input-group">
+            <label>Min Duration (min)</label>
+            <input type="number" value={minDuration} onChange={e => { setMinDuration(Number(e.target.value)); setSaved(false) }} />
+          </div>
+        </>
+      )}
       <div className="fp-actions">
         <button className="fp-btn-save" onClick={handleSave} disabled={saving || !isDirty}>
           {saving ? 'Saving...' : 'Save'}
@@ -356,17 +388,18 @@ function AdminDashboard() {
       <header className="admin-header">
         <div className="admin-header-inner">
           <div className="admin-brand">
-            <div className="admin-logo">E</div>
-            <div>
-              <h1>Estate Facilities</h1>
-              <p>Employee Dashboard</p>
-            </div>
+            <h1 className="admin-brand-title">REGIMANUEL GRAY</h1>
+            <p className="admin-brand-subtitle">Estate Facilities</p>
           </div>
-          <span className="admin-tag">Staff View</span>
+          <span className="admin-tag">Sector Manager</span>
         </div>
       </header>
 
       <main className="admin-main">
+        <div className="admin-page-intro">
+          <h2>Facility Operations</h2>
+          <p>Manage bookings, payment status, approvals and facility pricing.</p>
+        </div>
 
         {/* ── Stat cards ── */}
         <section className="stat-grid">
@@ -390,7 +423,10 @@ function AdminDashboard() {
 
         {/* ── Facility Pricing ── */}
         <section className="admin-section">
-          <h2>Facility Pricing</h2>
+          <div className="admin-section-header">
+            <h2>Facility Pricing</h2>
+            <p>Update booking rates and minimum reservation durations.</p>
+          </div>
           {loading ? (
             <p>Loading facilities...</p>
           ) : facilities.length === 0 ? (
@@ -404,8 +440,14 @@ function AdminDashboard() {
           )}
         </section>
 
-        {/* ── Filters ── */}
-        <section className="filter-bar">
+        {/* ── Booking Management ── */}
+        <section className="admin-section">
+          <div className="admin-section-header">
+            <h2>Booking Management</h2>
+            <p>Filter, review and update facility reservations.</p>
+          </div>
+          
+          <div className="filter-bar">
           <div className="filter-group">
             <label htmlFor="filter-facility">Facility</label>
             <select
@@ -465,10 +507,10 @@ function AdminDashboard() {
           <span className="results-count">
             {filtered.length} booking{filtered.length !== 1 ? 's' : ''}
           </span>
-        </section>
+          </div>
 
         {/* ── Table ── */}
-        <section className="table-section">
+        <div className="table-section">
           {loading ? (
             <div className="admin-loading">
               <div className="admin-spinner"></div>
@@ -537,7 +579,8 @@ function AdminDashboard() {
               </table>
             </div>
           )}
-        </section>
+        </div>
+      </section>
 
       </main>
 

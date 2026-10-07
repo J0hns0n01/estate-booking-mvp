@@ -17,6 +17,7 @@ function PaymentBridge() {
       const name = params.get('name')
       const email = params.get('email')
       const phone = params.get('answer_1')
+      const answer2 = params.get('answer_2') // Number of persons
       const bookingId = params.get('booking_id')
       const startAt = params.get('start_at')
       const endAt = params.get('end_at')
@@ -86,13 +87,31 @@ function PaymentBridge() {
         return
       }
 
-      if (durationMinutes < facilityData.minimum_duration_minutes) {
-        setErrorMessage(`Minimum booking duration for this facility is ${facilityData.minimum_duration_minutes} minutes.`)
-        setLoading(false)
-        return
-      }
+      let amount = 0;
+      let participantCount = 1;
 
-      const amount = (durationMinutes / 30) * facilityData.rate_per_30_minutes;
+      if (facilityData.pricing_model === 'per_person') {
+        const parsedPersons = parseInt(answer2, 10);
+        if (isNaN(parsedPersons) || parsedPersons < 1) {
+          setErrorMessage('Invalid number of persons.');
+          setLoading(false);
+          return;
+        }
+        if (facilityData.max_people_per_booking && parsedPersons > facilityData.max_people_per_booking) {
+          setErrorMessage(`Maximum number of persons is ${facilityData.max_people_per_booking}.`);
+          setLoading(false);
+          return;
+        }
+        participantCount = parsedPersons;
+        amount = participantCount * facilityData.price_per_person;
+      } else {
+        if (durationMinutes < facilityData.minimum_duration_minutes) {
+          setErrorMessage(`Minimum booking duration for this facility is ${facilityData.minimum_duration_minutes} minutes.`)
+          setLoading(false)
+          return
+        }
+        amount = (durationMinutes / 30) * facilityData.rate_per_30_minutes;
+      }
 
       const { error } = await supabase
         .from('bookings')
@@ -112,6 +131,7 @@ function PaymentBridge() {
             : null,
           duration_minutes: durationMinutes,
           facility: facility || null,
+          participant_count: participantCount,
           amount: amount,
           payment_status: 'pending',
           booking_status: 'pending_approval'
@@ -135,6 +155,9 @@ function PaymentBridge() {
         durationMinutes,
         facilitySlug: facility || null,
         facilityLabel,
+        pricingModel: facilityData.pricing_model,
+        pricePerPerson: facilityData.price_per_person,
+        participantCount,
         amount
       })
 
@@ -179,11 +202,11 @@ function PaymentBridge() {
 
   if (loading) {
     return (
-      <div className="page">
-        <div className="card">
-          <div className="spinner"></div>
+      <div className="payment-page">
+        <div className="payment-card payment-card--loading">
+          <div className="payment-spinner"></div>
           <h2>Preparing your booking...</h2>
-          <p>Please wait a moment.</p>
+          <p>Please wait a moment while we retrieve your details.</p>
         </div>
       </div>
     )
@@ -191,9 +214,13 @@ function PaymentBridge() {
 
   if (errorMessage) {
     return (
-      <div className="page">
-        <div className="card">
-          <div className="statusIcon error">!</div>
+      <div className="payment-page">
+        <div className="payment-card payment-card--error">
+          <div className="payment-status-icon error">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+             </svg>
+          </div>
           <h2>Unable to load booking</h2>
           <p>{errorMessage}</p>
         </div>
@@ -202,82 +229,97 @@ function PaymentBridge() {
   }
 
   return (
-    <div className="page">
-      <div className="card">
-        <div className="brand">
-          <div className="logoMark">E</div>
-          <div>
-            <h1>Estate Facilities</h1>
-            <p>Booking &amp; Payment</p>
-          </div>
-        </div>
+    <div className="payment-page">
+      <div className="payment-card">
+        
+        <header className="payment-header">
+          <h1 className="payment-brand-title">REGIMANUEL GRAY</h1>
+          <p className="payment-brand-subtitle">Estate Facilities</p>
+        </header>
 
-        <div className="successBox">
-          <div className="statusIcon">✓</div>
-          <div>
+        <div className="payment-status-panel">
+          <div className="payment-status-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div className="payment-status-text">
             <h2>Booking received</h2>
-            <p>Your booking is pending payment and approval.</p>
+            <p>Review your reservation details and proceed to payment.</p>
           </div>
         </div>
 
-        <div className="section">
-          <h3>Booking Summary</h3>
-
-          <div className="row">
-            <span>Name</span>
-            <strong>{booking.name || 'Not provided'}</strong>
+        <div className="payment-summary">
+          <div className="payment-row">
+            <span className="payment-label">Name</span>
+            <strong className="payment-value">{booking.name || 'Not provided'}</strong>
           </div>
-
-          <div className="row">
-            <span>Email</span>
-            <strong>{booking.email || 'Not provided'}</strong>
+          <div className="payment-row">
+            <span className="payment-label">Email</span>
+            <strong className="payment-value">{booking.email || 'Not provided'}</strong>
           </div>
-
-          <div className="row">
-            <span>Facility</span>
-            <strong>{booking.facilityLabel}</strong>
+          <div className="payment-row">
+            <span className="payment-label">Facility</span>
+            <strong className="payment-value">{booking.facilityLabel}</strong>
           </div>
-
-          <div className="row">
-            <span>Date</span>
-            <strong>{booking.bookingDate}</strong>
+          <div className="payment-row">
+            <span className="payment-label">Date</span>
+            <strong className="payment-value">{booking.bookingDate}</strong>
           </div>
-
-          <div className="row">
-            <span>Time</span>
-            <strong>
+          <div className="payment-row">
+            <span className="payment-label">Time</span>
+            <strong className="payment-value">
               {booking.startTime}
               {booking.endTime ? ` - ${booking.endTime}` : ''}
             </strong>
           </div>
-
-          <div className="row">
-            <span>Duration</span>
-            <strong>
-              {booking.durationMinutes
-                ? `${booking.durationMinutes} minutes`
-                : 'Not available'}
-            </strong>
+          {booking.pricingModel === 'per_person' ? (
+            <>
+              <div className="payment-row">
+                <span className="payment-label">Number of Persons</span>
+                <strong className="payment-value">{booking.participantCount}</strong>
+              </div>
+              <div className="payment-row">
+                <span className="payment-label">Price per Person</span>
+                <strong className="payment-value">GH₵ {booking.pricePerPerson?.toLocaleString('en-GH')}</strong>
+              </div>
+            </>
+          ) : (
+            <div className="payment-row">
+              <span className="payment-label">Duration</span>
+              <strong className="payment-value">
+                {booking.durationMinutes
+                  ? `${booking.durationMinutes} minutes`
+                  : 'Not available'}
+              </strong>
+            </div>
+          )}
+          <div className="payment-row">
+            <span className="payment-label">Booking ID</span>
+            <strong className="payment-value">{booking.bookingId}</strong>
           </div>
-
-          <div className="row">
-            <span>Amount</span>
-            <strong>GH₵ {booking.amount?.toLocaleString('en-GH')}</strong>
-          </div>
-
-          <div className="row">
-            <span>Booking ID</span>
-            <strong>{booking.bookingId}</strong>
+          <div className="payment-row payment-row--amount">
+            <span className="payment-label">Amount</span>
+            <strong className="payment-value">GH₵ {booking.amount?.toLocaleString('en-GH')}</strong>
           </div>
         </div>
 
-        <button className="payButton" onClick={handlePayment} disabled={paymentInitializing}>
-          {paymentInitializing ? 'Preparing Payment...' : 'Proceed to Payment'}
-        </button>
+        <div className="payment-action">
+          <button className="payment-btn" onClick={handlePayment} disabled={paymentInitializing}>
+            {paymentInitializing ? 'Preparing Payment...' : 'Proceed to Payment'}
+          </button>
+          
+          <div className="payment-trust">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+            </svg>
+            Secure payment processing
+          </div>
 
-        <p className="note">
-          Your booking will be confirmed after payment is verified and approved.
-        </p>
+          <p className="payment-note">
+            Your booking will be confirmed after payment is verified and approved.
+          </p>
+        </div>
       </div>
     </div>
   )
