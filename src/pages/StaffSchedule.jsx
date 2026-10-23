@@ -93,7 +93,7 @@ function StaffSchedule() {
       // READ-ONLY: only SELECT, never update/insert/delete
       const { data, error: fetchError } = await supabase
         .from('bookings')
-        .select('id, customer_name, start_time, end_time, duration_minutes, booking_date, facility')
+        .select('id, customer_name, start_time, end_time, duration_minutes, booking_date, facility, participant_count')
         .eq('facility', config.slug)
         .eq('payment_status', 'paid')
         .eq('booking_status', 'approved')
@@ -220,6 +220,9 @@ function StaffSchedule() {
                 <div className="sched-card-body">
                   <p className="sched-customer-name">{b.customer_name || 'Guest'}</p>
                   <p className="sched-facility-label">{config.label}</p>
+                  {config.slug === 'swimming_pool' && b.participant_count != null && (
+                    <p className="sched-participants">Participants: {b.participant_count}</p>
+                  )}
                 </div>
 
                 {/* Duration */}

@@ -264,6 +264,13 @@
   margin: 0;
 }
 
+.sched-participants {
+  font-size: 13px;
+  font-weight: 600;
+  color: #133b2b;
+  margin: 4px 0 0;
+}
+
 .sched-card-meta {
   text-align: right;
 }

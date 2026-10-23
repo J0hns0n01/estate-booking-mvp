@@ -274,22 +274,22 @@ function FacilityPricingRow({ facility }) {
       {isPerPerson ? (
         <>
           <div className="fp-input-group">
-            <label>Price / Person (GH₵)</label>
+            <label>Price / Person</label>
             <input type="number" value={pricePerPerson} onChange={e => { setPricePerPerson(Number(e.target.value)); setSaved(false) }} />
           </div>
           <div className="fp-input-group">
-            <label>Max People</label>
+            <label>Maximum People / Booking</label>
             <input type="number" value={maxPeople} onChange={e => { setMaxPeople(Number(e.target.value)); setSaved(false) }} />
           </div>
         </>
       ) : (
         <>
           <div className="fp-input-group">
-            <label>Rate / 30m (GH₵)</label>
+            <label>Rate / 30 minutes</label>
             <input type="number" value={rate} onChange={e => { setRate(Number(e.target.value)); setSaved(false) }} />
           </div>
           <div className="fp-input-group">
-            <label>Min Duration (min)</label>
+            <label>Minimum Duration</label>
             <input type="number" value={minDuration} onChange={e => { setMinDuration(Number(e.target.value)); setSaved(false) }} />
           </div>
         </>

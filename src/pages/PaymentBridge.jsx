@@ -87,30 +87,34 @@ function PaymentBridge() {
         return
       }
 
-      let amount = 0;
-      let participantCount = 1;
+      let amount = 0
+      let participantCount = 1
 
       if (facilityData.pricing_model === 'per_person') {
-        const parsedPersons = parseInt(answer2, 10);
-        if (isNaN(parsedPersons) || parsedPersons < 1) {
-          setErrorMessage('Invalid number of persons.');
-          setLoading(false);
-          return;
+        const rawAnswer2 = (answer2 || '').trim()
+        const isWholeInteger = /^\d+$/.test(rawAnswer2)
+        const parsedPersons = isWholeInteger ? parseInt(rawAnswer2, 10) : NaN
+        const maxAllowed = facilityData.max_people_per_booking || 4
+
+        if (!isWholeInteger || isNaN(parsedPersons) || parsedPersons < 1) {
+          setErrorMessage('Invalid number of persons.')
+          setLoading(false)
+          return
         }
-        if (facilityData.max_people_per_booking && parsedPersons > facilityData.max_people_per_booking) {
-          setErrorMessage(`Maximum number of persons is ${facilityData.max_people_per_booking}.`);
-          setLoading(false);
-          return;
+        if (parsedPersons > maxAllowed) {
+          setErrorMessage(`Maximum number of persons is ${maxAllowed}.`)
+          setLoading(false)
+          return
         }
-        participantCount = parsedPersons;
-        amount = participantCount * facilityData.price_per_person;
+        participantCount = parsedPersons
+        amount = participantCount * facilityData.price_per_person
       } else {
         if (durationMinutes < facilityData.minimum_duration_minutes) {
           setErrorMessage(`Minimum booking duration for this facility is ${facilityData.minimum_duration_minutes} minutes.`)
           setLoading(false)
           return
         }
-        amount = (durationMinutes / 30) * facilityData.rate_per_30_minutes;
+        amount = (durationMinutes / 30) * facilityData.rate_per_30_minutes
       }
 
       const { error } = await supabase
@@ -299,7 +303,7 @@ function PaymentBridge() {
             <strong className="payment-value">{booking.bookingId}</strong>
           </div>
           <div className="payment-row payment-row--amount">
-            <span className="payment-label">Amount</span>
+            <span className="payment-label">Total Amount</span>
             <strong className="payment-value">GH₵ {booking.amount?.toLocaleString('en-GH')}</strong>
           </div>
         </div>
