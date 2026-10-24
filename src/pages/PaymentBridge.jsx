@@ -8,6 +8,7 @@ function PaymentBridge() {
   const [booking, setBooking] = useState(null)
   const [loading, setLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
+  const [paymentError, setPaymentError] = useState('')
   const [paymentInitializing, setPaymentInitializing] = useState(false)
 
   useEffect(() => {
@@ -174,7 +175,7 @@ function PaymentBridge() {
   async function handlePayment() {
     if (!booking) return
     setPaymentInitializing(true)
-    setErrorMessage('')
+    setPaymentError('')
 
     try {
       const res = await fetch('/api/initialize-payment', {
@@ -190,16 +191,31 @@ function PaymentBridge() {
         })
       })
 
-      const data = await res.json()
+      let data = null
+      try {
+        const text = await res.text()
+        data = text ? JSON.parse(text) : null
+      } catch {
+        data = null
+      }
 
       if (!res.ok) {
-        throw new Error(data.message || 'Failed to initialize payment')
+        throw new Error(
+          data?.message ||
+          (res.status === 404
+            ? 'Payment endpoint (/api/initialize-payment) not found on local dev server. Run `vercel dev` to test Paystack.'
+            : `Payment initialization failed (${res.status}).`)
+        )
+      }
+
+      if (!data?.authorization_url) {
+        throw new Error('Payment authorization URL missing.')
       }
 
       window.location.href = data.authorization_url
     } catch (err) {
       console.error(err)
-      setErrorMessage(err.message)
+      setPaymentError(err.message)
       setPaymentInitializing(false)
     }
   }
@@ -313,6 +329,12 @@ function PaymentBridge() {
             {paymentInitializing ? 'Preparing Payment...' : 'Proceed to Payment'}
           </button>
           
+          {paymentError && (
+            <p className="payment-error-note" style={{ color: '#dc2626', fontSize: '13px', margin: '12px 0 0' }}>
+              {paymentError}
+            </p>
+          )}
+
           <div className="payment-trust">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
